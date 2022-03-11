@@ -5,7 +5,6 @@ set -euo pipefail
 audio=$1
 video=$2
 
-filename=$(basename -- "$video")
-out="${filename%.*}"_audio_merged."${filename##*.}"
+out="${video%.*}"_audio_merged."${video##*.}"
 
 ffmpeg -i "$audio" -i "$video" -c:v copy -c:a aac -map 0:a:0 -map 1:v:0 "$out"
