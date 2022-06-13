@@ -1,0 +1,26 @@
+# Colored Pencils
+gmic -input content.png fx_cpencil 0.7,20,20,2,2,1,0 -output output.png
+
+# Brushify
+fx_brushify 7,0.25,4,64,25,12,0,2,4,0.2,0.5,30,1,1,1,5,0,0.2,1
+
+# Dream Smoothing
+fx_dreamsmooth 3,1,1,0.8,0,0.8,1,24,0
+
+# Graphic Boost
+fx_graphic_boost4 1.25,2,0,0.15,14,0,1,0.5,0.45,2,0,0,0,1,1,1,0.5,0.45,1
+
+# Graphic Novel
+fx_graphic_novelfxl 0,2,6,5,20,0,0.62,14,0,1,0.5,0.78,1.92,0,0,0,1,1,1,0.5,0.8,1.28
+
+# Highlight Bloom
+fx_highlight_bloom 90,60,60,30,20,0,50,50
+
+# Illustration Look
+fx_illustration_look 100,0,0,0,0
+
+# TODO Style Transfer
+fx_stylize 0,5,0,1,0.5,2,3,0.5,0.1,3,3,0,0.7,1,0,1,0,5,5,7,1,30,2,2,1.85,0
+
+## Example
+gmic -input style.png -input content.png fx_stylize 0,5,0,1,0.5,2,3,0.5,0.1,3,3,0,0.7,1,0,1,0,5,5,7,1,30,2,2,1.85,0
