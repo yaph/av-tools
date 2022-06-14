@@ -9,6 +9,7 @@ from subprocess import run, list2cmdline
 
 
 START_TIME = time.time()
+IMG_PATTERN = '%05d.png'
 TMP_VIDEO = 'with-effect.mp4'
 
 # Video effects
@@ -29,20 +30,31 @@ parser.add_argument('-fps', type=float, default=25, help='Frames per seconds.')
 cli_args = parser.parse_args()
 
 video_in = Path(cli_args.input)
-p_tmp = video_in.parent.joinpath(video_in.stem)
-p_tmp.mkdir(exist_ok=True)
-video_with_effect = p_tmp.joinpath(f'{cli_args.fx}.mp4')
+p_new = video_in.parent.joinpath(f'{video_in.stem}-{cli_args.fx}')
+p_input = p_new.joinpath('input')
+p_input.mkdir(exist_ok=True, parents=True)
+p_output = p_new.joinpath('output')
+p_output.mkdir(exist_ok=True)
 
 # Split video into images
-run(['ffmpeg', '-i', video_in, '-vf', f'fps={cli_args.fps}', f'{p_tmp}/%05d.png'])
+run(['ffmpeg', '-i', video_in, '-vf', f'fps={cli_args.fps}', f'{p_input}/{IMG_PATTERN}'])
 
-# When passing the arguments as a list gmic fails with an 'Unknown filename' error.
-cmd_gmic = f'gmic -input {p_tmp.joinpath("*.png")} {FX[cli_args.fx]} -output {video_with_effect},{cli_args.fps}'
-run(cmd_gmic, shell=True)
+# Process images and apply effect
+for img in p_input.glob('*.png'):
+    img_new = p_output.joinpath(img.name)
+    if img_new.exists():
+        continue
+    # When passing the arguments as a list gmic fails with an 'Unknown filename' error.
+    cmd_gmic = f'gmic -input {img} {FX[cli_args.fx]} -output {img_new}'
+    run(cmd_gmic, shell=True)
+
+# Create new video
+video_out = p_output.joinpath('video.mp4')
+run(['ffmpeg', '-i', f'{p_output}/{IMG_PATTERN}', '-r', f'{cli_args.fps}', video_out])
 
 # Merge orignal audio and video with effect
-run(['merge_av.sh', video_in, video_with_effect])
+run(['merge_av.sh', video_in, video_out])
 
 # Done
-print(f'Prgram execution time: {timedelta(seconds=time.time() - START_TIME)}')
+print(f'Program execution time: {timedelta(seconds=time.time() - START_TIME)}')
 run(['spd-say', 'finished'])
