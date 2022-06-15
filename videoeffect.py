@@ -14,6 +14,7 @@ TMP_VIDEO = 'with-effect.mp4'
 
 # Video effects
 FX = {
+    '60scinema': 'fx_gb_cfx 10,0,0,0,0,0',
     'brushify': '7,0.25,4,64,25,12,0,2,4,0.2,0.5,30,1,1,1,5,0,0.2,1',
     'dreamsmooth': 'fx_dreamsmooth 3,1,1,0.8,0,0.8,1,24,0',
     'coloredpencils': 'fx_cpencil 0.7,20,20,2,2,1,0',
@@ -27,6 +28,7 @@ parser = argparse.ArgumentParser(description='Apply effect on input video one fr
 parser.add_argument('input', type=str, help='The input video.')
 parser.add_argument('-fx', choices=FX.keys(), default='illustrationlook', help='Effect to apply.')
 parser.add_argument('-fps', type=float, default=25, help='Frames per seconds.')
+parser.add_argument('-c', '--continue', action='store_true', dest='CONTINUE', help='Continue a previously started process.')
 cli_args = parser.parse_args()
 
 video_in = Path(cli_args.input)
@@ -36,12 +38,14 @@ p_input.mkdir(exist_ok=True, parents=True)
 p_output = p_new.joinpath('output')
 p_output.mkdir(exist_ok=True)
 
-# Split video into images
-run(['ffmpeg', '-i', video_in, '-vf', f'fps={cli_args.fps}', f'{p_input}/{IMG_PATTERN}'])
+if not cli_args.CONTINUE:
+    # Split video into images
+    run(['ffmpeg', '-i', video_in, '-vf', f'fps={cli_args.fps}', f'{p_input}/{IMG_PATTERN}'])
 
 # Process images and apply effect
 for img in p_input.glob('*.png'):
     img_new = p_output.joinpath(img.name)
+    # Keep existing images, so jobs can be continued, if they were not finished.
     if img_new.exists():
         continue
     # When passing the arguments as a list gmic fails with an 'Unknown filename' error.
