@@ -6,7 +6,6 @@ import ffmpeg
 
 from collections import namedtuple
 from pathlib import Path
-from subprocess import run, list2cmdline
 
 
 Coords = namedtuple('Coords', 'x y')
