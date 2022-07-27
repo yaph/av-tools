@@ -36,7 +36,7 @@ def get_watermark_coords(video, watermark, position, margin):
 parser = argparse.ArgumentParser(description='Add watermark image to video.')
 parser.add_argument('video', type=str, help='The input video.')
 parser.add_argument('watermark', type=str, help='The watermark image.')
-parser.add_argument('-p', '--position', choices='bl br tl tr', default='br', help='Position of watermark.')
+parser.add_argument('-p', '--position', choices=['bl', 'br', 'tl', 'tr'], default='br', help='Position of watermark.')
 parser.add_argument('-m', '--margin', type=float, default=0, help='Margin to main image borders.')
 cli_args = parser.parse_args()
 
