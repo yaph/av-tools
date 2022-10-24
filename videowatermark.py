@@ -38,16 +38,22 @@ parser.add_argument('video', type=str, help='The input video.')
 parser.add_argument('watermark', type=str, help='The watermark image.')
 parser.add_argument('-p', '--position', choices=['bl', 'br', 'tl', 'tr'], default='br', help='Position of watermark.')
 parser.add_argument('-m', '--margin', type=float, default=0, help='Margin to main image borders.')
-cli_args = parser.parse_args()
+parser.add_argument('-s', '--silent', action='store_true', help='Set to silent if video hast no audio.')
+argv = parser.parse_args()
 
-p_video = Path(cli_args.video)
-p_watermark = Path(cli_args.watermark)
+p_video = Path(argv.video)
+p_watermark = Path(argv.watermark)
 p_output = p_video.parent.joinpath(f'{p_video.stem}.watermark{p_video.suffix}')
 
-coords = get_watermark_coords(p_video, p_watermark, cli_args.position, cli_args.margin)
+coords = get_watermark_coords(p_video, p_watermark, argv.position, argv.margin)
 
 video = ffmpeg.input(p_video)
 watermark = ffmpeg.input(p_watermark)
 
-watermarked = ffmpeg.concat(video.overlay(watermark, x=coords.x, y=coords.y), video.audio, v=1, a=1).node
+match argv.silent:
+    case True:
+        watermarked = ffmpeg.concat(video.overlay(watermark, x=coords.x, y=coords.y), v=1).node
+    case _:
+        watermarked = ffmpeg.concat(video.overlay(watermark, x=coords.x, y=coords.y), video.audio, v=1, a=1).node
+
 ffmpeg.output(watermarked[0], p_output.as_posix()).run()
