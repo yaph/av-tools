@@ -27,6 +27,7 @@ parser.add_argument('-s', '--start', help='Start screen image.')
 parser.add_argument('-sd', '--start-duration', type=float, default=1, help='Start screen duration in seconds.')
 parser.add_argument('-e', '--end', help='End screen image.')
 parser.add_argument('-ed', '--end-duration', type=float, default=3, help='End screen duration in seconds.')
+parser.add_argument('-o', '--outfile', type=Path, help='Name of the output video file.')
 parser.add_argument('--silent', action='store_true', help='Set to silent if video hast no audio.')
 argv = parser.parse_args()
 
@@ -37,7 +38,6 @@ video = ffmpeg.input(argv.video)
 
 # Create dummy input to use as audio track for screens
 dummy = ffmpeg.input(f'anullsrc=r={streams["a"]["sample_rate"]}:cl={streams["a"]["channel_layout"]}', f='lavfi', t=0.1)
-
 
 if argv.start:
     stream = ffmpeg.input(argv.start, loop=1, t=argv.start_duration, framerate=framerate)
@@ -50,8 +50,11 @@ if argv.end:
     concat += [stream.video, dummy.audio]
 
 
-cmd = ffmpeg.concat(*concat, v=1, a=1).output('out.mp4')
-#print(cmd.compile())
+if not (outfile := argv.outfile):
+    p = Path(argv.video)
+    outfile = p.parent.joinpath(f'{p.name}.addscreens{p.suffix}')
+
+cmd = ffmpeg.concat(*concat, v=1, a=1).output(outfile.as_posix())
 cmd.run()
 
 # p2 = ffmpeg.input(endscreen, loop=1, t=SCREEN_DURATION, framerate=video_stream['r_frame_rate'])
