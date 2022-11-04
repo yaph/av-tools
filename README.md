@@ -10,3 +10,9 @@ Command line programs for processing audio and video created while working on ht
     1 = 90 Clockwise
     2 = 90 Counter Clockwise
     3 = 90 Clockwise and Vertical Flip
+
+## Speed-up Video
+
+Speed up by a factor of 2.
+
+    ffmpeg -i input.mp4 -filter:v "setpts=0.5*PTS" output.mp4
