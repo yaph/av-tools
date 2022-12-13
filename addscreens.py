@@ -28,7 +28,7 @@ parser.add_argument('-sd', '--start-duration', type=float, default=1, help='Star
 parser.add_argument('-e', '--end', help='End screen image.')
 parser.add_argument('-ed', '--end-duration', type=float, default=3, help='End screen duration in seconds.')
 parser.add_argument('-o', '--outfile', type=Path, help='Name of the output video file.')
-parser.add_argument('--silent', action='store_true', help='Set to silent if video hast no audio.')
+#parser.add_argument('--silent', action='store_true', help='Set to silent if video hast no audio.')
 argv = parser.parse_args()
 
 concat = []
