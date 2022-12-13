@@ -32,18 +32,26 @@ parser.add_argument('--silent', action='store_true', help='Set to silent if vide
 argv = parser.parse_args()
 
 concat = []
+dummy = None
 streams = get_streams(argv.video)
 framerate = streams['v']['r_frame_rate']
 video = ffmpeg.input(argv.video)
+video_audio = None
 
 # Create dummy input to use as audio track for screens
-dummy = ffmpeg.input(f'anullsrc=r={streams["a"]["sample_rate"]}:cl={streams["a"]["channel_layout"]}', f='lavfi', t=0.1)
+if 'a' in streams:
+    dummy = ffmpeg.input(f'anullsrc=r={streams["a"]["sample_rate"]}:cl={streams["a"]["channel_layout"]}', f='lavfi', t=0.1)
+    video_audio = video.audio
+else:
+    dummy = ffmpeg.input(f'anullsrc', f='lavfi', t=0.1)
+    video_audio = dummy.audio
+
 
 if argv.start:
     stream = ffmpeg.input(argv.start, loop=1, t=argv.start_duration, framerate=framerate)
     concat += [stream.video, dummy.audio]
 
-concat += [video.video, video.audio]
+concat += [video.video, video_audio]
 
 if argv.end:
     stream = ffmpeg.input(argv.end, loop=1, t=argv.end_duration, framerate=framerate)
