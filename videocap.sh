@@ -5,6 +5,6 @@ set -euo pipefail
 video=$1
 starttime=${2:-'0:00'}
 
-out="${video%.*}".webp
+out="${video%.*}".png
 
 ffmpeg -ss "$starttime" -i "$video" -frames:v 1 -q:v 2 "$out"
