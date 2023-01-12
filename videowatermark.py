@@ -15,7 +15,17 @@ Dimensions = namedtuple('Dimensions', 'width height')
 def get_dimensions(path):
     probe = ffmpeg.probe(path)
     video_stream = next((stream for stream in probe['streams'] if stream['codec_type'] == 'video'), None)
-    return Dimensions(width=int(video_stream['width']), height=int(video_stream['height']))
+
+    width = int(video_stream['width'])
+    height = int(video_stream['height'])
+
+    # Swap width and height if video is rotated
+    if 'side_data_list' in video_stream:
+        rot = video_stream['side_data_list'][0].get('rotation')
+        if rot == -90:
+            width, height = height, width
+
+    return Dimensions(width=width, height=height)
 
 
 def get_watermark_coords(video, watermark, position, margin):
