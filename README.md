@@ -2,14 +2,20 @@
 
 Command line programs for processing audio and video created while working on https://ukealong.com/.
 
+## Fit Video
+
+Fit a vertical video that is smaller than 1080x1920px on these dimensions:
+
+    ffmpeg -i input.mp4 -vf "pad=1080:1920:(ow-iw)/2:(oh-ih)/2" output.mp4
+
 ## Rotate Video
 
-    ffmpeg -i input.mp4 -vf "transpose=2" output.mp4
+0 = 90 Counter Clockwise and Vertical Flip (default)
+1 = 90 Clockwise
+2 = 90 Counter Clockwise
+3 = 90 Clockwise and Vertical Flip
 
-    0 = 90 Counter Clockwise and Vertical Flip (default)
-    1 = 90 Clockwise
-    2 = 90 Counter Clockwise
-    3 = 90 Clockwise and Vertical Flip
+    ffmpeg -i input.mp4 -vf "transpose=2" output.mp4
 
 ## Speed-up Video
 
