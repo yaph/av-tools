@@ -2,6 +2,12 @@
 
 Command line programs for processing audio and video created while working on https://ukealong.com/.
 
+## Find Videos and Show Sizes
+
+Find video files with and list their file sizes and the total size of all videos.
+
+    find . -name "*.mp*" -print0 | du -shc --files0-from=-
+
 ## Fit Video
 
 Fit a vertical video that is smaller than 1080x1920px on these dimensions:
