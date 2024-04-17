@@ -2,6 +2,10 @@
 
 Command line programs for processing audio and video created while working on https://ukealong.com/.
 
+## Concatenate two video files omitting the audio
+
+    ffmpeg -i v1.mp4 -i v2.mp4 -filter_complex "[0:v][1:v]concat=n=2:v=1:a=0[v]" -map "[v]" out.mp4
+
 ## Find Videos and Show Sizes
 
 Find video files with and list their file sizes and the total size of all videos.
