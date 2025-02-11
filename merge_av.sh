@@ -15,4 +15,5 @@ video=$2
 
 out="${video%.*}".av."${video##*.}"
 
-ffmpeg -i "$audio" -i "$video" -c:v copy -c:a aac -map 0:a:0 -map 1:v:0 "$out"
+ffmpeg -i "$audio" -i "$video" -c:v copy -c:a aac -ar 48000 -ac 2 -b:a 128k \
+    -movflags +faststart -map 0:a:0 -map 1:v:0 "$out"
