@@ -18,6 +18,10 @@ Fit a vertical video that is smaller than 1080x1920px on these dimensions:
 
     ffmpeg -i input.mp4 -vf "pad=1080:1920:(ow-iw)/2:(oh-ih)/2" output.mp4
 
+## Remove Comments from MP3 files
+
+    eyeD3 --remove-all-comments *.mp3
+
 ## Rotate Video
 
 0 = 90 Counter Clockwise and Vertical Flip (default)
