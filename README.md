@@ -36,3 +36,9 @@ Fit a vertical video that is smaller than 1080x1920px on these dimensions:
 Speed up by a factor of 2.
 
     ffmpeg -i input.mp4 -filter:v "setpts=0.5*PTS" output.mp4
+
+## YouTube
+
+Create a list of YouTube URLs from playlist.
+
+    yt-dlp -j --flat-playlist https://www.youtube.com/playlist?list=ID | jq -r '.id' | sed 's#^#https://youtu.be/#'
