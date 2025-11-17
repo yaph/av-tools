@@ -17,7 +17,7 @@ for file in *; do
         fi
 
         # Process with error handling
-        if ffmpeg -i "$file" "$output_file"; then
+        if ffmpeg -i "$file" -c:v libx265 -preset slow -c:a copy "$output_file"; then
             touch -r "$file" "$output_file"
             echo "Converted: $file -> $output_file"
         else
