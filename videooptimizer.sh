@@ -16,8 +16,15 @@ for file in *; do
             continue
         fi
 
+        # Check if the input file is already encoded with libx265
+        if ffprobe -v error -show_streams -select_streams v "$file" | grep -q "codec_name=hevc"; then
+            echo "Skipping $file - already encoded with libx265"
+            continue
+        fi
+
         # Process with error handling
         if ffmpeg -i "$file" -c:v libx265 -preset slow -c:a copy "$output_file"; then
+            # Keep modified time of original video
             touch -r "$file" "$output_file"
             echo "Converted: $file -> $output_file"
         else
