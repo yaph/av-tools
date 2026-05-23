@@ -66,4 +66,4 @@ match argv.silent:
     case _:
         watermarked = ffmpeg.concat(video.overlay(watermark, x=coords.x, y=coords.y), video.audio, v=1, a=1).node
 
-ffmpeg.output(watermarked[0], p_output.as_posix()).run()
+ffmpeg.output(watermarked[0], p_output.as_posix(), vcodec='libx265').run()
